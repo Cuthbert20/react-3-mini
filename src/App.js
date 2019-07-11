@@ -29,8 +29,25 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
+    // axios (GET)  //below we are creating a promise and .then taking the results into a function.
+    axios
+    // The promise method
+    .get('https://joes-autos.herokuapp.com/api/vehicles')
+    //if the promise is fulfilled
+    .then((result) => {
+      //console.log(result.data)
+
+      this.setState({
+        vehiclesToDisplay: result.data
+      })
+      toast.success("Successfully fetched all the vehicles")
+    })
+    //if the promise is rejected
+    .catch(()=>{
+      toast.error('failed to fetch all the vehicles')
+    })
     // setState with response -> vehiclesToDisplay
+
   }
 
   getPotentialBuyers() {
@@ -40,6 +57,17 @@ class App extends Component {
 
   sellCar(id) {
     // axios (DELETE)
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
+    .then((res) => {
+      //console.log(res)
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+      toast.success("it sold WOW")
+    })
+    .catch(() =>{
+      toast.error("didn't sale car ie delete car")
+    })
     // setState with response -> vehiclesToDisplay
   }
 
@@ -59,6 +87,17 @@ class App extends Component {
 
   updatePrice(priceChange, id) {
     // axios (PUT)
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+    .then((res) => {
+      //console.log(res.data.vehicles)
+      toast.success("Price has been updated")
+      this.setState({
+          vehiclesToDisplay: res.data.vehicles
+      })
+    })
+    .catch(() => {
+      toast.error("Failed to update price")
+    })
     // setState with response -> vehiclesToDisplay
   }
 
@@ -72,6 +111,19 @@ class App extends Component {
     };
 
     // axios (POST)
+    axios
+    //because this is a post we are adding as a second parameter body which in this case is newCar. Body will always be an object.
+    .post(`https://joes-autos.herokuapp.com/api/vehicles/`, newCar)
+    .then((res) => {
+      toast.success("Vehicle added")
+      //console.log(res)
+      this.setState({
+        vehiclesToDisplay: res.data.vehicles
+      })
+    })
+    .catch(()=>{
+      toast.error("Error no car added")
+    })
     // setState with response -> vehiclesToDisplay
   }
 
